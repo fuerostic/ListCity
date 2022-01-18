@@ -1,30 +1,26 @@
 package com.example.simpleparadox.listycity;
-
-import android.app.Activity;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
+import android.app.Activity;
 import android.widget.EditText;
 import android.widget.ListView;
-
 import com.robotium.solo.Solo;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+
 /**
  * Test class for MainActivity. All the UI tests are written here. Robotium test framework is used
  */
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest{
-
+public class ShowAcitivityTest {
     private Solo solo;
 
     @Rule
@@ -52,7 +48,7 @@ public class MainActivityTest{
      * Clear all the cities from the listview and check again with assertFalse
      */
     @Test
-    public void checkList(){
+    public void checkSwitch(){
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
@@ -60,17 +56,17 @@ public class MainActivityTest{
 
         //Get view for EditText and enter a city name
         solo.enterText((EditText) solo.getView(R.id.editText_name), "Edmonton");
-        solo.clickOnView(solo.getView(R.id.button_confirm));
-//        solo.clickOnButton("CONFIRM"); //Select CONFIRM Button
+        solo.clickOnView(solo.getView(R.id.button_confirm)); //Select CONFIRM Button
         solo.clearEditText((EditText) solo.getView(R.id.editText_name)); //Clear the EditText
 
         /* True if there is any text: Edmonton on the screen, wait at least 2 seconds and
         find minimum one match. */
         assertTrue(solo.waitForText("Edmonton", 1, 2000));
-        solo.clickOnView(solo.getView(R.id.button_clear));
-//        solo.clickOnButton("ClEAR ALL"); //Select ClEAR ALL
-        //True if there is no text: Edmonton on the screen
-        assertFalse(solo.searchText("Edmonton"));
+
+        solo.clickOnText("Edmonton");
+
+        solo.assertCurrentActivity("Wrong Activity",ShowActivity.class);
+
 
     }
 
@@ -78,19 +74,53 @@ public class MainActivityTest{
      * Check item taken from the listview
      */
     @Test
-    public void checkCiyListItem(){
+    public void checkCiyName(){
+
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
-        solo.clickOnButton("ADD CITY");
+        solo.clickOnButton("ADD CITY"); //Click ADD CITY Button
+
+        //Get view for EditText and enter a city name
         solo.enterText((EditText) solo.getView(R.id.editText_name), "Edmonton");
-        solo.clickOnView(solo.getView(R.id.button_confirm));
-//        solo.clickOnButton("CONFIRM");
+        solo.clickOnView(solo.getView(R.id.button_confirm)); //Select CONFIRM Button
+        solo.clearEditText((EditText) solo.getView(R.id.editText_name)); //Clear the EditText
+
+        /* True if there is any text: Edmonton on the screen, wait at least 2 seconds and
+        find minimum one match. */
+        assertTrue(solo.waitForText("Edmonton", 1, 2000));
+
+        solo.clickOnText("Edmonton");
+        solo.waitForActivity("ShowActivity");
+        solo.assertCurrentActivity("Wrong Activity", ShowActivity.class);
+
         solo.waitForText("Edmonton", 1, 2000);
-        // Get MainActivity to access its variables and methods.
-        MainActivity activity = (MainActivity) solo.getCurrentActivity();
-        final ListView cityList = activity.cityList; // Get the listview
-        String city = (String) cityList.getItemAtPosition(0); // Get item from first position
-        assertEquals("Edmonton", city);
+
+    }
+
+    @Test
+    public void checkBackButton(){
+
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        solo.clickOnButton("ADD CITY"); //Click ADD CITY Button
+
+        //Get view for EditText and enter a city name
+        solo.enterText((EditText) solo.getView(R.id.editText_name), "Edmonton");
+        solo.clickOnView(solo.getView(R.id.button_confirm));  //Select CONFIRM Button
+        solo.clearEditText((EditText) solo.getView(R.id.editText_name)); //Clear the EditText
+
+        /* True if there is any text: Edmonton on the screen, wait at least 2 seconds and
+        find minimum one match. */
+        assertTrue(solo.waitForText("Edmonton", 1, 2000));
+
+        solo.clickOnText("Edmonton");
+
+        solo.assertCurrentActivity("Wrong Activity", ShowActivity.class);
+// testing back button
+        solo.clickOnView(solo.getView(R.id.btn_back));
+
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
     }
 
     /**

@@ -2,6 +2,7 @@ package com.example.simpleparadox.listycity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -44,6 +45,16 @@ public class MainActivity extends AppCompatActivity {
 
         cityAdapter = new ArrayAdapter<>(this, R.layout.content, dataList);
 
+        cityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String currentSelectedCity = parent.getItemAtPosition(position).toString();
+
+                Intent showCity = new Intent(getApplicationContext(),ShowActivity.class);
+                showCity.putExtra("city",currentSelectedCity);
+                startActivity(showCity);
+            }
+        });
 
         cityList.setAdapter(cityAdapter);
 
